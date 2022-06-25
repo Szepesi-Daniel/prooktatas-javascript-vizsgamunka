@@ -1,0 +1,92 @@
+<style>
+  body {
+    background-image: url(https://wallpaperaccess.com/full/2090218.jpg) !important;
+  }
+</style>
+<div id="flash" class="flash"></div>
+<div class="container-100 d-flex flex-center">
+  <div class="double-box bg-dark" id="double-box">
+    <div class="layer"></div>
+    <div class="left">
+      <div class="active flex-center">
+        <form
+          id="register-form"
+          class="p-5"
+          style="width: 100% !important"
+          novalidate
+        >
+          <div class="input-group mb-1">
+            <input id="register-name" class="group-control" type="text" />
+            <div class="label">Teljes név</div>
+            <small class="text-danger" id="error-register-name"></small>
+          </div>
+          <div class="input-group mb-1">
+            <input id="register-email" class="group-control" type="email" />
+            <div class="label">E-mail cím</div>
+            <small class="text-danger" id="error-register-email"></small>
+          </div>
+          <div class="input-group mb-1">
+            <input
+              id="register-password"
+              class="group-control"
+              type="password"
+            />
+            <div class="label">Jelszó</div>
+            <small class="text-danger" id="error-register-password"></small>
+          </div>
+          <div class="input-group mb-1">
+            <input id="register-tel" class="group-control" type="tel" />
+            <div class="label">Mobil szám</div>
+            <small class="text-danger" id="error-register-tel"></small>
+          </div>
+          <button class="btn btn-primary" style="color: black">
+            Regisztráció
+          </button>
+        </form>
+      </div>
+      <div class="inactive flex-center">
+        <h1 class="mb-2" style="color: white">Regisztráció</h1>
+        <button
+          id="register-view-btn"
+          class="btn btn-dark-500 border-dark-1 border-radius-3"
+        >
+          Regisztráció
+        </button>
+      </div>
+    </div>
+    <div class="right">
+      <div class="active flex-center">
+        <form
+          id="login-form"
+          class="p-5"
+          style="width: 100% !important"
+          novalidate
+        >
+          <div class="input-group mb-1">
+            <input class="group-control" id="login-email" type="text" />
+            <div class="label">E-mail cím</div>
+            <small class="text-danger" id="error-login-email"></small>
+          </div>
+          <div class="input-group mb-1">
+            <input class="group-control" id="login-password" type="text" />
+            <div class="label">Jelszó</div>
+            <small class="text-danger" id="error-login-password"></small>
+          </div>
+          <button class="btn btn-primary" style="color: black">
+            Bejelentkezés
+          </button>
+        </form>
+      </div>
+      <div class="inactive flex-center">
+        <h1 class="mb-2" style="color: white">Bejelentkezés</h1>
+        <button
+          id="login-view-btn"
+          class="btn btn-dark-500 border-dark-1 border-radius-5"
+        >
+          Bejelentkezés
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="spinner"></div>

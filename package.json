@@ -1,0 +1,35 @@
+{
+  "type": "module",
+  "name": "prooktatas-js",
+  "version": "1.0.0",
+  "description": "Prooktatás JavaScript vizsgamunka",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon start"
+  },
+  "keywords": [
+    "prooktatas",
+    "javascript",
+    "js",
+    "exam work",
+    "vizsgamunka"
+  ],
+  "author": "Szepesi Dániel",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-mongodb-session": "^3.1.1",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-mongodb-session": "^3.2.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.3.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        background: rgb(199, 230, 235);
+        background: -moz-linear-gradient(
+          90deg,
+          rgba(199, 230, 235, 1) 0%,
+          rgba(243, 244, 244, 1) 20%,
+          rgba(189, 215, 245, 1) 52%,
+          rgba(193, 217, 245, 1) 80%,
+          rgba(243, 244, 244, 1) 100%
+        );
+        background: -webkit-linear-gradient(
+          90deg,
+          rgba(199, 230, 235, 1) 0%,
+          rgba(243, 244, 244, 1) 20%,
+          rgba(189, 215, 245, 1) 52%,
+          rgba(193, 217, 245, 1) 80%,
+          rgba(243, 244, 244, 1) 100%
+        );
+        background: linear-gradient(
+          90deg,
+          rgba(199, 230, 235, 1) 0%,
+          rgba(243, 244, 244, 1) 20%,
+          rgba(189, 215, 245, 1) 52%,
+          rgba(193, 217, 245, 1) 80%,
+          rgba(243, 244, 244, 1) 100%
+        );
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c7e6eb",endColorstr="#f3f4f4",GradientType=1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav"></div>
+    <div class="container p-2">
+      <div class="d-flex justify-content-center mb-2">
+        <input id="date" class="admin-date" type="date" onkeydown="return" />
+      </div>
+      <div class="appointments">
+        <div class="table" style="font-weight: bold" id="appointments">
+          <div class="col">
+            <div class="cel"></div>
+            <div class="cel">9:00</div>
+            <div class="cel">9:30</div>
+            <div class="cel">10:00</div>
+            <div class="cel">10:30</div>
+            <div class="cel">11:00</div>
+            <div class="cel">11:30</div>
+            <div class="cel">12:00</div>
+            <div class="cel">12:30</div>
+            <div class="cel">13:00</div>
+            <div class="cel">13:30</div>
+            <div class="cel">14:00</div>
+            <div class="cel">14:30</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footer"></div>
+    <div class="admin-menu" id="admin-menu"></div>
+  </body>
+</html>

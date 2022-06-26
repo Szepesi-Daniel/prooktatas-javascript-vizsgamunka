@@ -28,14 +28,14 @@ export default class EmailController {
         html,
       })
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
   static CreateTransporter() {
     if (!this._service || !this._email || !this._password) {
-      throw new Error(
-        `Kérlek add meg a(z) ${this._service ? '' : 'SERVICE,'} ${
+      return console.error(
+        `Email küldés sikertelen, Kérlek add meg a(z) ${this._service ? '' : 'SERVICE,'} ${
           this._email ? '' : 'EMAIL,'
         } ${this._password ? '' : 'PASSWORD,'} környezeti változó(kat)`
       )

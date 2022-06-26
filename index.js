@@ -7,6 +7,10 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import MongoDBStore from 'connect-mongodb-session'
 import getView from './utils/getView.js'
+import fs from 'fs'
+import path, { basename } from 'path'
+import config from './config.js'
+import UserModel from './db/models/User.js'
 
 const SESSION_NAME = process.env.SESSION_NAME
 const SESSION_COLLECTION = process.env.SESSION_COLLECTION
@@ -56,17 +60,38 @@ app.use(
 )
 app.use(cookieParser())
 
-const MONOGDB_URI = process.env.MONOGDB_URI
+const MONGODB_URI = process.env.MONGODB_URI
 
-if (!MONOGDB_URI) {
+if (!MONGODB_URI) {
   throw new Error('Add meg a MONGODB_URI környezeti változót a .env fájlban')
 }
 
-moogoose.connect(process.env.MONOGDB_URI, (err) => {
+moogoose.connect(process.env.MONGODB_URI, async (err) => {
   if (err) throw err
   app.listen(PORT, () => {
     console.log('A szerver futt')
   })
+
+  try {
+    const filePath = path.join(config.basePath, '/users.json')
+    let data = fs.readFileSync(filePath, 'utf-8')
+
+    data = JSON.parse(data)
+
+    if (!data.firstStart) return
+
+    data.firstStart = false
+
+    fs.writeFileSync(filePath, JSON.stringify(data))
+
+    for (const user of data.users) {
+      const newUser = new UserModel(user)
+
+      newUser.save()
+    }
+  } catch (e) {
+    console.error(e)
+  }
 })
 
 app.use(express.urlencoded({ extended: false }))

@@ -33,7 +33,7 @@ router.post('/auth/logout', auth, (req, res) => {
   ApiHandler(req, res, AuthController.Logout)
 })
 
-router.get('/hairdressers/:index?', auth, (req, res) =>
+router.get('/hairdressers/', auth, (req, res) =>
   ApiHandler(req, res, EmployeeController.GetHairdressers)
 )
 
@@ -60,7 +60,7 @@ router.post('/auth/create-employee', admin, (req, res) =>
   ApiHandler(req, res, AuthController.CreateEmployee)
 )
 
-router.post('/auth/delete-employee', admin, (req, res) =>
+router.delete('/auth/delete-employee', admin, (req, res) =>
   ApiHandler(req, res, AuthController.DeleteEmployee)
 )
 

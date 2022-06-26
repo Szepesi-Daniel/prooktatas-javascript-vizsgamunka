@@ -4,19 +4,18 @@ import UserModel from '../db/models/User.js'
 
 export default class Hairdressers {
   static async GetHairdressers(req, res) {
-    let { index } = req.params
+    try{
 
+      let { index } = req.params
+      
     if (!index) index = 0
 
     if (isNaN(index)) return res.status(404).send({ error: 'NotFound' })
 
     const fields = {
       full_name: true,
-      employee: {
-        profile_picture: true,
-        description: true,
-        appointments: true,
-      },
+      "employee.profile_picture": true,
+      "employee.description": true,
     }
 
     const employees = await UserModel.find(
@@ -24,27 +23,28 @@ export default class Hairdressers {
       fields,
       { skip: index * 10, limit: 10 }
     )
-
+    
     res.send(employees)
+  }catch(e){
+    console.log(e)
+  }
   }
 
   static async GetHairdresser(req, res) {
     let { id, date } = req.params
 
     if (!mongoose.isValidObjectId(id))
-      return res.send({ success: false, error: 'Érvénytelen ID' })
-
+    return res.send({ success: false, error: 'Érvénytelen ID' })
+    
     let d = new Date(date)
-
+    
     if (isNaN(d)) d = new Date()
 
     const fields = {
       full_name: true,
-      employee: {
-        appointments: true,
-        freedoms: true,
-        profile_picture: true,
-      },
+      "employee.appointments": true,
+      "employee.freedoms": true,
+      "employee.profile_picture": true
     }
 
     const user = await UserModel.findOne(

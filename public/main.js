@@ -143,13 +143,15 @@ define("lib/framework/Router", ["require", "exports"], function (require, export
                     const params = {};
                     for (const [index, str] of arr2.entries()) {
                         const str2 = arr[index];
-                        const isOptional = str2.endsWith('?');
-                        const isKey = str2.startsWith(':');
+                        const isOptional = str2 === null || str2 === void 0 ? void 0 : str2.endsWith('?');
+                        const isKey = str2 === null || str2 === void 0 ? void 0 : str2.startsWith(':');
                         if (!isOptional && str2 === undefined)
                             break;
                         if (!isKey && str2 !== str)
                             break;
                         if (!str && str2.length !== 0)
+                            break;
+                        if (arr.length !== arr2.length)
                             break;
                         if (isKey)
                             params[str2.slice(1)] = str;
@@ -257,7 +259,6 @@ define("model/Appointment", ["require", "exports", "lib/framework/fetch"], funct
                 const result = yield (0, fetch_2.api)('/appointments/' + date);
                 if (result.success && result.success === false)
                     throw 'hiba';
-                console.log(result);
                 return result;
             });
         }
@@ -371,6 +372,16 @@ define("model/User", ["require", "exports", "lib/framework/config", "lib/framewo
                 return result;
             });
         }
+        static Register(data) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const result = yield (0, fetch_4.api)('/auth/register', data, { method: 'POST' });
+                if (!result.success)
+                    return result;
+                this._user = result.user;
+                console.log(result);
+                return result;
+            });
+        }
     }
     exports.default = User;
     User._user = {};
@@ -418,9 +429,6 @@ define("lib/framework/View", ["require", "exports", "lib/utils/selectors", "lib/
         }
         Show() {
             (0, selectors_1.$id)(this._root).style.visibility = 'visible';
-        }
-        ShowFlash(type, message) {
-            console.log(type, message);
         }
         Destroy() { }
     }
@@ -492,9 +500,19 @@ define("view/AppointmentView", ["require", "exports", "lib/framework/Router", "l
                     '<p>Sajnos erre a napra nincs szabad időpont</p>';
             }
             for (const freeDate of freeDates) {
-                const html = `<button class="btn btn-primary appointment-btn date-btn-js">${freeDate}</button>`;
+                const html = `<button data-date="${freeDate}" class="btn btn-primary appointment-btn date-btn-js">${freeDate}</button>`;
                 this._freeDatesDisplay.insertAdjacentHTML('beforeend', html);
             }
+        }
+        SetSelected(date) {
+            const btn = (0, selectors_2.$)(`[data-date="${date}"]`);
+            if (!btn)
+                return;
+            const btns = (0, selectors_2.$$)('.date-btn-js');
+            btns.forEach((e) => {
+                e.classList.remove('selected');
+            });
+            btn.classList.add('selected');
         }
     }
     exports.default = AppointmentView;
@@ -571,13 +589,12 @@ define("view/layouts/NavView", ["require", "exports", "lib/framework/View", "lib
         ShowLogoutBtn() {
             (0, selectors_4.$id)('logout-button').classList.remove('hide');
             (0, selectors_4.$id)('logout-button').addEventListener('click', () => {
-                console.log(this._events);
                 this.Emit('logout');
             });
         }
         ShowEmployeeButton() {
             (0, selectors_4.$id)('employee-btn').style.display = 'block';
-            (0, selectors_4.$id)('employee-btn').addEventListener('click', e => this.Emit('employeeBtnClick'));
+            (0, selectors_4.$id)('employee-btn').addEventListener('click', (e) => this.Emit('employeeBtnClick'));
         }
     }
     exports.default = NavView;
@@ -630,7 +647,7 @@ define("controller/AppointmentController", ["require", "exports", "lib/framework
                 }));
                 this._activeView.On('dateSelect', (data) => {
                     this._selectedDate = data;
-                    console.log(this._selectedDate);
+                    this._activeView.SetSelected(data);
                 });
                 this._activeView.On('bookNow', () => __awaiter(this, void 0, void 0, function* () {
                     const result = yield Appointment_1.default.BookNow(`${Router_3.default.params.date} ${this._selectedDate}`, User_2.default.user.id, Router_3.default.params.id);
@@ -861,6 +878,14 @@ define("view/AuthView", ["require", "exports", "lib/framework/Validator", "lib/f
                     ],
                 })
                     .RenderErrors();
+                if (validator.hasError())
+                    return;
+                this.Emit('register', {
+                    email: this._registerEmail.value,
+                    password: this._registerPassword.value,
+                    tel: this._registerTel.value,
+                    name: this._registerName.value,
+                });
             });
             this._inputs.forEach((inp) => {
                 inp.addEventListener('focus', (e) => {
@@ -880,6 +905,18 @@ define("view/AuthView", ["require", "exports", "lib/framework/Validator", "lib/f
                 return;
             }
             (0, selectors_6.$id)('error-login-email').innerHTML = errors.toString();
+        }
+        RenderRegisterErrors(errors) {
+            if (!errors)
+                return;
+            (0, selectors_6.$id)(`error-register-email`).innerHTML = '';
+            (0, selectors_6.$id)(`error-register-password`).innerHTML = '';
+            (0, selectors_6.$id)(`error-register-tel`).innerHTML = '';
+            (0, selectors_6.$id)(`error-register-name`).innerHTML = '';
+            for (const [key, value] of Object.entries(errors)) {
+                (0, selectors_6.$id)(`error-register-${key}`).innerHTML =
+                    value === 'busy' ? `A megadot ${key} foglalt` : value.toString();
+            }
         }
     }
     exports.default = AuthView;
@@ -935,9 +972,20 @@ define("controller/AuthController", ["require", "exports", "lib/framework/Contro
                 }
                 Router_4.default.Navigate('/');
             });
+            this.RegisterHandler = (data) => __awaiter(this, void 0, void 0, function* () {
+                this._layouts.spinner.Show();
+                const res = yield User_3.default.Register(data);
+                this._layouts.spinner.Hide();
+                if (!res.success) {
+                    return this._activeView.RenderRegisterErrors(res.errors);
+                }
+                this._layouts.flash.AddFlash('success', `Sikeresen regisztráció!`);
+                Router_4.default.Navigate('/');
+            });
         }
         Start() {
             this._activeView.On('login', this.LoginHandler);
+            this._activeView.On('register', this.RegisterHandler);
         }
     }
     exports.default = AuthController;
@@ -1035,7 +1083,6 @@ define("view/admin/DateView", ["require", "exports", "lib/framework/View", "lib/
                 date.showPicker();
             });
             date.addEventListener('change', (e) => {
-                console.log(e.target.value);
                 this.Emit('dateChange', { date: e.target.value });
             });
             this.adminMenu.addEventListener('click', (e) => {
@@ -1082,7 +1129,7 @@ define("controller/admin/DateController", ["require", "exports", "lib/framework/
             super(...arguments);
             this._views = { main: DateView_1.default };
             this._title = 'Admin - Időpontok';
-            this.HandleStart = () => __awaiter(this, void 0, void 0, function* () {
+            this.DatesHandler = () => __awaiter(this, void 0, void 0, function* () {
                 const employees = yield Appointment_2.default.GetAppointments(Router_5.default.params.date);
                 const startOfWorkHours = '9:00';
                 const endOfWorkHours = '17:00';
@@ -1096,14 +1143,13 @@ define("controller/admin/DateController", ["require", "exports", "lib/framework/
                 const dateOfStartMs = dateOfStart.getTime();
                 const array = [];
                 const lastIndex = (dateOfEndMs - dateOfStartMs) / (1000 * 60 * step);
-                let index = 0;
                 for (const employee of employees) {
                     const data = {};
+                    let index = 0;
                     data.name = employee.name;
                     data.img = employee.img;
                     data.id = employee._id;
                     data.appointment = [];
-                    console.log(data.id);
                     for (const [i, appointment] of employee.appointments.entries()) {
                         const app = {};
                         const d = new Date(appointment.date).getTime();
@@ -1130,16 +1176,16 @@ define("controller/admin/DateController", ["require", "exports", "lib/framework/
         }
         Start() {
             return __awaiter(this, void 0, void 0, function* () {
-                this.HandleStart();
+                this.DatesHandler();
                 this._activeView.On('dateChange', (e) => {
                     Router_5.default.UpdateParams('date', e.date);
-                    this.HandleStart();
+                    this.DatesHandler();
                 });
                 this._activeView.On('delete', (data) => __awaiter(this, void 0, void 0, function* () {
                     const res = yield Appointment_2.default.DeletAppointment(data.id, data.date);
                     if (!res.success)
                         return;
-                    this.HandleStart();
+                    this.DatesHandler();
                 }));
             });
         }
@@ -1327,12 +1373,5 @@ define("main", ["require", "exports", "controller/AppointmentController", "contr
         middlewares: [auth_1.default, employee_1.default],
     });
     Router_10.default.Run();
-});
-define("lib/framework/MyFramwork", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class MyFramwork {
-    }
-    exports.default = MyFramwork;
 });
 //# sourceMappingURL=main.js.map

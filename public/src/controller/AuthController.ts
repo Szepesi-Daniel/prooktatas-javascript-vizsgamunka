@@ -16,6 +16,7 @@ export default class AuthController extends Controller {
 
   Start(): void {
     this._activeView.On('login', this.LoginHandler)
+    this._activeView.On('register', this.RegisterHandler)
   }
 
   public LoginHandler = async (data: { email: string; password: string }) => {
@@ -30,6 +31,27 @@ export default class AuthController extends Controller {
 
       return
     }
+
+    Router.Navigate('/')
+  }
+
+  public RegisterHandler = async (data: {
+    email: string
+    tel: string
+    password: string
+    name: string
+  }) => {
+    this._layouts.spinner.Show()
+
+    const res = await User.Register(data)
+
+    this._layouts.spinner.Hide()
+
+    if (!res.success) {
+      return this._activeView.RenderRegisterErrors(res.errors)
+    }
+
+    this._layouts.flash.AddFlash('success', `Sikeresen regisztráció!`)
 
     Router.Navigate('/')
   }

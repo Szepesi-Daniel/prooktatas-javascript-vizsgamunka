@@ -1,6 +1,6 @@
 import Router from '../lib/framework/Router'
 import View from '../lib/framework/View'
-import { $, $id } from '../lib/utils/selectors'
+import { $, $$, $id } from '../lib/utils/selectors'
 
 export default class AppointmentView extends View {
   protected _htmlFileName: string = 'appointment'
@@ -81,9 +81,23 @@ export default class AppointmentView extends View {
     }
 
     for (const freeDate of freeDates) {
-      const html = `<button class="btn btn-primary appointment-btn date-btn-js">${freeDate}</button>`
+      const html = `<button data-date="${freeDate}" class="btn btn-primary appointment-btn date-btn-js">${freeDate}</button>`
 
       this._freeDatesDisplay.insertAdjacentHTML('beforeend', html)
     }
+  }
+
+  public SetSelected(date: string) {
+    const btn = $(`[data-date="${date}"]`)
+
+    if (!btn) return
+
+    const btns = $$('.date-btn-js')
+
+    btns.forEach((e: HTMLElement) => {
+      e.classList.remove('selected')
+    })
+
+    btn.classList.add('selected')
   }
 }

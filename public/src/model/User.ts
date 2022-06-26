@@ -22,7 +22,7 @@ export default class User {
     return true
   }
 
-  public static IsEmployee() : boolean {
+  public static IsEmployee(): boolean {
     return this._user.employee
   }
 
@@ -48,6 +48,23 @@ export default class User {
     if (result.success) {
       this._user = result.user
     }
+
+    return result
+  }
+
+  public static async Register(data: {
+    email: string
+    password: string
+    tel: string
+    name: string
+  }) {
+    const result = await api('/auth/register', data, { method: 'POST' })
+
+    if (!result.success) return result
+
+    this._user = result.user
+
+    console.log(result)
 
     return result
   }

@@ -38,9 +38,5 @@ export default class View {
     $id(this._root).style.visibility = 'visible'
   }
 
-  public ShowFlash(type: string, message: string) {
-    console.log(type, message)
-  }
-
   public Destroy() {}
 }

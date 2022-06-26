@@ -20,7 +20,6 @@ export default class Appointment {
     const result = await api('/appointments/' + date)
 
     if (result.success && result.success === false) throw 'hiba' // TODO: Befejezni
-    console.log(result)
     return result
   }
 

@@ -2,7 +2,8 @@ import mongoose from 'mongoose'
 import UserModel from '../db/models/User.js'
 import Validator from '../utils/Validator.js'
 import bcrypt from 'bcrypt'
-
+import getView from '../utils/getView.js'
+import EmailController from './EmailController.js'
 export default class AuthController {
   static Register = async (req, res) => {
     const { email, password, name, tel } = req.body
@@ -63,6 +64,13 @@ export default class AuthController {
 
       // Session mentése
       this.CreateSession(req, user)
+
+      EmailController.Send(
+        email,
+        'Regisztráció értesítő',
+        'registerNotify.html',
+        { name }
+      )
 
       // Adatok kiküldése a kliensnek
       res.send({

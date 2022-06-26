@@ -8,11 +8,11 @@ export default class BooksController extends Controller {
   protected _title: string = 'Admin - Időpontok'
 
   protected async Start() {
-    this.HandleStart()
+    this.DatesHandler()
 
     this._activeView.On('dateChange', (e: any) => {
       Router.UpdateParams('date', e.date)
-      this.HandleStart()
+      this.DatesHandler()
     })
 
     this._activeView.On(
@@ -22,12 +22,12 @@ export default class BooksController extends Controller {
 
         if (!res.success) return
 
-        this.HandleStart()
+        this.DatesHandler()
       }
     )
   }
 
-  private HandleStart = async () => {
+  private DatesHandler = async () => {
     const employees = await Appointment.GetAppointments(Router.params.date)
     const startOfWorkHours = '9:00'
     const endOfWorkHours = '17:00'
@@ -55,17 +55,15 @@ export default class BooksController extends Controller {
     const array: any = []
 
     const lastIndex = (dateOfEndMs - dateOfStartMs) / (1000 * 60 * step)
-    let index = 0
 
     for (const employee of employees) {
       const data: any = {}
+      let index = 0
 
       data.name = employee.name
       data.img = employee.img
       data.id = employee._id
       data.appointment = []
-
-      console.log(data.id)
 
       for (const [i, appointment] of employee.appointments.entries()) {
         const app: any = {}

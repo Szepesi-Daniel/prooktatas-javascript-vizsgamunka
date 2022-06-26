@@ -112,7 +112,6 @@ export default class BooksView extends View {
     })
 
     date.addEventListener('change', (e: any) => {
-      console.log(e.target.value)
       this.Emit('dateChange', { date: e.target.value })
     })
 

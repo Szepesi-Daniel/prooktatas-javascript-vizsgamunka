@@ -1,4 +1,8 @@
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
 export default {
+  basePath: dirname(fileURLToPath(import.meta.url)),
   workingTime: [
     {
       name: 'vasárnap',

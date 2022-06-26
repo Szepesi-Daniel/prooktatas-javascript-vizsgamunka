@@ -134,14 +134,15 @@ export default class Router {
 
       for (const [index, str] of arr2.entries()) {
         const str2 = arr[index]
-        const isOptional = str2.endsWith('?')
-        const isKey = str2.startsWith(':')
+        const isOptional = str2?.endsWith('?')
+        const isKey = str2?.startsWith(':')
 
         /* if (isOptional && !wasOptional) wasOptional = true
         if (!isOptional && wasOptional) break */
         if (!isOptional && str2 === undefined) break
         if (!isKey && str2 !== str) break
         if (!str && str2.length !== 0) break
+        if (arr.length !== arr2.length) break
 
         if (isKey) params[str2.slice(1)] = str
 

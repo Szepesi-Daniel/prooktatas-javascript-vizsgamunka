@@ -37,7 +37,7 @@ export default class AppointmentController extends Controller {
     this._activeView.On('dateSelect', (data: string) => {
       this._selectedDate = data
 
-      console.log(this._selectedDate)
+      this._activeView.SetSelected(data)
     })
 
     this._activeView.On('bookNow', async () => {

@@ -1,6 +1,4 @@
 import express from 'express'
-import path, { dirname } from 'path'
-import { fileURLToPath } from 'url'
 import apiRouter from './routers/api.js'
 import moogoose from 'mongoose'
 import 'dotenv/config'
@@ -8,6 +6,7 @@ import session from 'express-session'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import MongoDBStore from 'connect-mongodb-session'
+import getView from './utils/getView.js'
 
 const SESSION_NAME = process.env.SESSION_NAME
 const SESSION_COLLECTION = process.env.SESSION_COLLECTION
@@ -31,7 +30,6 @@ const store = new mongoStore({
 })
 const app = express()
 const PORT = 3000
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -78,5 +76,5 @@ app.use(express.static('public'))
 app.use('/api', apiRouter)
 
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/index.html'))
+  res.sendFile(getView('/index.html'))
 })

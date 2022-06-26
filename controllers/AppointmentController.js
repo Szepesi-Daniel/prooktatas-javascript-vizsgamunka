@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import config from '../config.js'
 import UserModel from '../db/models/User.js'
+import EmailController from './EmailController.js'
 
 export default class AppointmentController {
   static async Create(req, res) {
@@ -134,7 +135,7 @@ export default class AppointmentController {
       date: d,
     }
 
-    // Leellenőrzi, hogy az időpont foglalt-e
+    // Le ellenőrzi, hogy az időpont foglalt-e
     const exits = employee.employee.appointments.some(
       (e) => e.date.getTime() === d.getTime()
     )
@@ -154,6 +155,19 @@ export default class AppointmentController {
     /*     if (Number(exits)) {
       return false
     } */
+
+    EmailController.Send(
+      user.email,
+      'Időpont foglalás',
+      'appointmentNotify.html',
+      {
+        type: 'Hajvágás',
+        name: user.full_name,
+        date: d.toLocaleString(),
+        address: 'Budapest',
+        tel: employee.tel,
+      }
+    )
 
     res.send({
       success: true,
@@ -206,6 +220,7 @@ export default class AppointmentController {
           },
         },
       ])
+
       const result = []
 
       for await (const employee of employees) {

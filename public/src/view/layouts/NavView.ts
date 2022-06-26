@@ -16,7 +16,6 @@ export default class NavView extends View {
   public ShowLogoutBtn() {
     $id('logout-button').classList.remove('hide')
     $id('logout-button').addEventListener('click', () => {
-      console.log(this._events)
       this.Emit('logout')
     })
   }
@@ -24,6 +23,8 @@ export default class NavView extends View {
   public ShowEmployeeButton() {
     $id('employee-btn').style.display = 'block'
 
-    $id('employee-btn').addEventListener('click', e => this.Emit('employeeBtnClick'))
+    $id('employee-btn').addEventListener('click', (e) =>
+      this.Emit('employeeBtnClick')
+    )
   }
 }

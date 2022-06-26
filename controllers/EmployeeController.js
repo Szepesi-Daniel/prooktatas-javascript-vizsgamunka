@@ -3,7 +3,6 @@ import config from '../config.js'
 import UserModel from '../db/models/User.js'
 
 export default class Hairdressers {
-
   static async GetHairdressers(req, res) {
     let { index } = req.params
 

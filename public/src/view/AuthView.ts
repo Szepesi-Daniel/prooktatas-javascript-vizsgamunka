@@ -115,6 +115,15 @@ export default class AuthView extends View {
           ],
         })
         .RenderErrors()
+
+      if (validator.hasError()) return
+
+      this.Emit('register', {
+        email: this._registerEmail.value,
+        password: this._registerPassword.value,
+        tel: this._registerTel.value,
+        name: this._registerName.value,
+      })
     })
     this._inputs.forEach((inp) => {
       inp.addEventListener('focus', (e) => {
@@ -134,7 +143,21 @@ export default class AuthView extends View {
 
       return
     }
-    
+
     $id('error-login-email').innerHTML = errors.toString()
+  }
+
+  public RenderRegisterErrors(errors: {}) {
+    if (!errors) return
+
+    $id(`error-register-email`).innerHTML = ''
+    $id(`error-register-password`).innerHTML = ''
+    $id(`error-register-tel`).innerHTML = ''
+    $id(`error-register-name`).innerHTML = ''
+
+    for (const [key, value] of Object.entries(errors)) {
+      $id(`error-register-${key}`).innerHTML =
+        value === 'busy' ? `A megadot ${key} foglalt` : value.toString()
+    }
   }
 }

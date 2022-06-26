@@ -64,8 +64,6 @@ export default class User {
 
     this._user = result.user
 
-    console.log(result)
-
     return result
   }
 }

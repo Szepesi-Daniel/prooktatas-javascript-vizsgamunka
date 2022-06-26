@@ -33,8 +33,6 @@ export default class BooksController extends Controller {
     const endOfWorkHours = '17:00'
     const step = 30
 
-    console.log(employees)
-
     const dateOfStart = new Date(Router.params.date)
     const dateOfEnd = new Date(Router.params.date)
 

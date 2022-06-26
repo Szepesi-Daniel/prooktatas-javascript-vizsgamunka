@@ -378,7 +378,6 @@ define("model/User", ["require", "exports", "lib/framework/config", "lib/framewo
                 if (!result.success)
                     return result;
                 this._user = result.user;
-                console.log(result);
                 return result;
             });
         }
@@ -1134,7 +1133,6 @@ define("controller/admin/DateController", ["require", "exports", "lib/framework/
                 const startOfWorkHours = '9:00';
                 const endOfWorkHours = '17:00';
                 const step = 30;
-                console.log(employees);
                 const dateOfStart = new Date(Router_5.default.params.date);
                 const dateOfEnd = new Date(Router_5.default.params.date);
                 dateOfStart.setHours(Number(startOfWorkHours.split(':')[0]), Number(startOfWorkHours.split(':')[1]), 0);

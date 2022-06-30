@@ -4,8 +4,8 @@ import moogoose from 'mongoose'
 import 'dotenv/config'
 import session from 'express-session'
 import cors from 'cors'
-import cookieParser from 'cookie-parser'
-import MongoDBStore from 'connect-mongodb-session'
+import cookieParser from 'cookie-parser' /* 
+import MongoDBStore from 'connect-mongodb-session' */
 import getView from './utils/getView.js'
 import fs from 'fs'
 import path, { basename } from 'path'
@@ -20,24 +20,25 @@ if (!SESSION_NAME)
     'Kérlek add meg a SESSION_NAME környezeti változót a .env fájlban'
   )
 
-if (!SESSION_COLLECTION)
+/*if (!SESSION_COLLECTION)
   throw new Error(
     'Kérlek add meg a SESSION_COLLECTION környezeti változót a .env fájlban'
   )
 
-const mongoStore = MongoDBStore(session)
+ const mongoStore = MongoDBStore(session)
 
 const store = new mongoStore({
   collection: SESSION_COLLECTION,
   uri: process.env.MONOGDB_URI,
   expires: 1000,
-})
+}) */
+
 const app = express()
 const PORT = 3000
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(
+/* app.use(
   session({
     name: process.env.SESSION_NAME,
     secret: 'SESS_SECRET',
@@ -51,7 +52,7 @@ app.use(
       httpOnly: false,
     },
   })
-)
+) */
 app.use(
   cors({
     origin: true,
@@ -59,6 +60,17 @@ app.use(
   })
 )
 app.use(cookieParser())
+app.use(
+  session({
+    secret: 'vizsgamunka',
+    saveUninitialized: true,
+    resave: true,
+    cookie: {
+      maxAge: 1000 * 60 * 15,
+    },
+    name: process.env.SESSION_NAME,
+  })
+)
 
 const MONGODB_URI = process.env.MONGODB_URI
 

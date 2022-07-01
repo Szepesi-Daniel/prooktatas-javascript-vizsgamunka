@@ -31,8 +31,6 @@ export default class User {
   }
 
   public static async Logout() {
-    if (!checkCookie(config.sessionCookie)) return true
-
     const result = await api('/auth/logout', {}, { method: 'POST' }).catch(
       (e) => false
     )

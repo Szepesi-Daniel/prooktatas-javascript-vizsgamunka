@@ -355,8 +355,6 @@ define("model/User", ["require", "exports", "lib/framework/config", "lib/framewo
         }
         static Logout() {
             return __awaiter(this, void 0, void 0, function* () {
-                if (!(0, cookies_1.checkCookie)(config_2.default.sessionCookie))
-                    return true;
                 const result = yield (0, fetch_4.api)('/auth/logout', {}, { method: 'POST' }).catch((e) => false);
                 if (!result.success)
                     return false;
